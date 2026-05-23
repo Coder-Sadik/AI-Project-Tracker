@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Users ─────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      // Any signed-in user can read profiles (needed for member lists)
+      allow read: if request.auth != null;
+      // Users can only write their own profile
+      allow write: if request.auth.uid == userId;
+    }
+
+    // ── Projects ──────────────────────────────────────────────────────────
+    match /projects/{projectId} {
+      // Members can read
+      allow read: if request.auth.uid in resource.data.teamMembers;
+      // Creator can create
+      allow create: if request.auth.uid == request.resource.data.createdBy
+                    && request.auth.uid in request.resource.data.teamMembers;
+      // Only creator (admin) can update or delete
+      allow update, delete: if request.auth.uid == resource.data.createdBy;
+    }
+
+    // ── Requirements ──────────────────────────────────────────────────────
+    match /requirements/{reqId} {
+      function project() {
+        return get(/databases/$(database)/documents/projects/$(resource.data.projectId));
+      }
+      function projectForCreate() {
+        return get(/databases/$(database)/documents/projects/$(request.resource.data.projectId));
+      }
+
+      // Read: must be a team member
+      allow read: if request.auth.uid in project().data.teamMembers;
+
+      // Create: must be a team member with full editing (or admin)
+      allow create: if request.auth.uid in projectForCreate().data.teamMembers
+                    && (
+                      request.auth.uid == projectForCreate().data.createdBy
+                      || projectForCreate().data.editingLevel == 'full'
+                    );
+
+      // Update:
+      allow update: if request.auth.uid in project().data.teamMembers
+                    && (
+                      // Admin always can
+                      request.auth.uid == project().data.createdBy
+                      // Full editing: unrestricted
+                      || project().data.editingLevel == 'full'
+                      // Checkbox only: only completed + editor fields allowed
+                      || (
+                        project().data.editingLevel == 'checkboxesOnly'
+                        && request.resource.data.diff(resource.data).affectedKeys()
+                             .hasOnly(['completed', 'lastEditedBy', 'lastEditorColor', 'lastEditorName', 'updatedAt'])
+                      )
+                    );
+
+      // Delete: admin or full-editing members
+      allow delete: if request.auth.uid in project().data.teamMembers
+                    && (
+                      request.auth.uid == project().data.createdBy
+                      || project().data.editingLevel == 'full'
+                    );
+    }
+
+    // ── Activities ────────────────────────────────────────────────────────
+    match /activities/{activityId} {
+      function projectForActivity() {
+        return get(/databases/$(database)/documents/projects/$(resource.data.projectId));
+      }
+      function projectForCreate() {
+        return get(/databases/$(database)/documents/projects/$(request.resource.data.projectId));
+      }
+
+      allow read: if request.auth.uid in projectForActivity().data.teamMembers;
+      allow create: if request.auth.uid in projectForCreate().data.teamMembers;
+      // Activities are immutable
+      allow update, delete: if false;
+    }
+  }
+}
