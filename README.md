@@ -6,9 +6,9 @@ A full-stack, real-time collaborative project management tool that transforms do
 
 - **Next.js 14** (App Router, TypeScript)
 - **Firebase** (Auth, Firestore, Storage)
-- **OpenAI GPT-4o mini** — strict requirement extraction
-- **Tailwind CSS** — custom design system
-- **Libraries**: `pdf-parse`, `mammoth`, `react-hot-toast`, `date-fns`, `jspdf`, `react-dropzone`, `next-themes`
+- **Google Gemini 2.5 Flash** — lightning fast, strict requirement extraction
+- **Tailwind CSS** — custom "Luxe Minimalist" design system with glassmorphism & responsive animations
+- **Libraries**: `@google/genai`, `pdf-parse`, `mammoth`, `react-hot-toast`, `date-fns`, `jspdf`, `react-dropzone`, `next-themes`
 
 ## Features
 
@@ -22,8 +22,8 @@ A full-stack, real-time collaborative project management tool that transforms do
 - 📅 **Due Dates** — per-requirement deadlines with overdue highlighting
 - 📤 **Export** — PDF, CSV, Markdown one-click export
 - 🌙 **Dark Mode** — smooth theme toggle, persisted in localStorage
-- 🎭 **Demo Mode** — try without signing up at `/demo`
-- 📱 **Responsive** — works on mobile down to 320px
+- 🎭 **Interactive Landing Page** — features a Live AI Demo widget and an animated interactive stepper
+- 📱 **Responsive & Premium UI** — custom DM Sans typography, refined colour palettes, and fluid micro-animations
 
 ## Setup
 
@@ -42,9 +42,9 @@ A full-stack, real-time collaborative project management tool that transforms do
 2. Click **Generate new private key** → download JSON
 3. Copy `client_email` and `private_key` values
 
-### 3. OpenAI API Key
+### 3. Google Gemini API Key
 
-1. Go to [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Create a new API key
 
 ### 4. Environment Variables
@@ -66,7 +66,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=...
 FIREBASE_ADMIN_CLIENT_EMAIL=...
 FIREBASE_ADMIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
 
-OPENAI_API_KEY=sk-...
+GEMINI_API_KEY=AIzaSy...
 ```
 
 > ⚠️ The `FIREBASE_ADMIN_PRIVATE_KEY` must be wrapped in double quotes and have literal `\n` for newlines.
@@ -116,6 +116,8 @@ app/
 │   ├── export/              # ExportMenu (PDF/CSV/MD)
 │   ├── projects/            # ProjectCard
 │   ├── requirements/        # RequirementRow, AddForm, VersionHistory
+│   ├── live-demo-widget.tsx # Interactive AI simulation widget
+│   ├── animated-how-it-works.tsx # Interactive animated stepper
 │   ├── navbar.tsx
 │   └── theme-provider.tsx
 ├── lib/
