@@ -1,131 +1,71 @@
-# AI Project Tracker
+# AI Project Tracker 🚀
 
-A full-stack, real-time collaborative project management tool that transforms documents into structured requirements using AI.
+A premium, full-stack, real-time collaborative project management tool that magically transforms unstructured documents into structured project requirements using Google Gemini 2.5 Flash.
 
-## Tech Stack
+Designed with a custom **"Luxe Minimalist"** aesthetic, this application focuses on fluid micro-animations, glassmorphism, and a highly polished user experience.
 
-- **Next.js 14** (App Router, TypeScript)
-- **Firebase** (Auth, Firestore, Storage)
-- **Google Gemini 2.5 Flash** — lightning fast, strict requirement extraction
-- **Tailwind CSS** — custom "Luxe Minimalist" design system with glassmorphism & responsive animations
-- **Libraries**: `@google/genai`, `pdf-parse`, `mammoth`, `react-hot-toast`, `date-fns`, `jspdf`, `react-dropzone`, `next-themes`
+---
 
-## Features
+## ✨ Core Features
 
-- 🤖 **AI Extraction** — paste text or upload PDF/DOCX/TXT → AI extracts only explicit requirements with confidence scores
-- 🔄 **Real-Time Sync** — Firestore `onSnapshot` listeners sync changes instantly across all team members
-- 🎨 **Colour-Coded Accountability** — every edit is stamped with the editor's colour
-- 👥 **Role-Based Access** — Full Editing vs Checkbox Only modes, enforced in Firestore rules
-- 📋 **Activity Log** — live feed of all changes with timestamps
-- 🕐 **Version History** — revert any requirement to a previous version
-- 🏷️ **Tags & Filters** — custom project tags with colour coding
-- 📅 **Due Dates** — per-requirement deadlines with overdue highlighting
-- 📤 **Export** — PDF, CSV, Markdown one-click export
-- 🌙 **Dark Mode** — smooth theme toggle, persisted in localStorage
-- 🎭 **Interactive Landing Page** — features a Live AI Demo widget and an animated interactive stepper
-- 📱 **Responsive & Premium UI** — custom DM Sans typography, refined colour palettes, and fluid micro-animations
+### 🤖 Instant AI Extraction
+Stop writing project tickets manually. Simply paste your brief, or upload a PDF/DOCX file. Our integration with **Google Gemini 2.5 Flash** instantly scans the document and extracts *only* the explicitly stated requirements, turning paragraphs into structured, actionable tasks.
 
-## Setup
+### ⚡ Real-Time Collaboration
+No refresh required. Built on Firebase Firestore with `onSnapshot` listeners, every edit, new requirement, or checkbox toggle syncs instantly across all connected team members. 
 
-### 1. Firebase Project
+### 🎨 Colour-Coded Accountability
+Full transparency in multiplayer mode. Every team member is assigned a unique colour upon joining. Every change or edit to a requirement is permanently stamped with the editor's colour and name.
 
-1. Go to [console.firebase.google.com](https://console.firebase.google.com)
-2. Create a new project
-3. Enable **Firestore Database** (start in test mode, then apply the rules)
-4. Enable **Authentication** → add providers: **Email/Password**, **Google**, **Anonymous**
-5. Enable **Storage**
-6. Go to **Project Settings** → **Your apps** → Add a **Web app** → copy the config
+### 🎭 Interactive & Premium UI
+- **Live AI Demo Widget:** Test the AI extraction right on the landing page.
+- **Animated Auto-Stepper:** A beautiful, auto-advancing "How it Works" section with dynamic CSS animations (typing text, scanning bars, flying cursors).
+- **Luxe Minimalist Design:** DM Sans typography, soft glassmorphism panels, and carefully crafted easing curves for hover states and transitions.
+- **Smooth Dark Mode:** Natively built to swap between a crisp light mode and a deep, luxurious dark mode.
 
-### 2. Firebase Admin SDK Key
+### 🛡️ Role-Based Access Control
+Project owners have ultimate control. Grant teammates full editing permissions, or restrict them to a "Checkbox Only" mode to prevent unauthorized scope creep.
 
-1. In Firebase Console → **Project Settings** → **Service Accounts**
-2. Click **Generate new private key** → download JSON
-3. Copy `client_email` and `private_key` values
+### 🕒 Deep Activity & Version History
+- **Activity Log:** A live, scrolling feed of all changes made to the project with exact timestamps.
+- **Time Travel:** Accidentally deleted a requirement? View the full version history of any task and revert it back to a previous state with one click.
 
-### 3. Google Gemini API Key
+### 📤 Export Anywhere
+When the project plan is finalized, export it in one click to:
+- **PDF** for client sign-off
+- **CSV** for Excel/Google Sheets tracking
+- **Markdown** for GitHub/Jira importing
 
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Create a new API key
+---
 
-### 4. Environment Variables
+## 🛠️ Tech Stack
 
-```bash
-cp .env.local.example .env.local
-```
+- **Framework:** Next.js 14 (App Router, Server/Client Components)
+- **Language:** TypeScript
+- **Database & Auth:** Firebase (Firestore, Auth, Storage, Security Rules)
+- **AI Model:** Google Gemini 2.5 Flash (`@google/genai`)
+- **Styling:** Tailwind CSS (Custom design system)
+- **Utilities:** `pdf-parse`, `mammoth`, `date-fns`, `jspdf`, `next-themes`
 
-Fill in all values in `.env.local`:
+---
 
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
-NEXT_PUBLIC_FIREBASE_APP_ID=...
-
-FIREBASE_ADMIN_CLIENT_EMAIL=...
-FIREBASE_ADMIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
-
-GEMINI_API_KEY=AIzaSy...
-```
-
-> ⚠️ The `FIREBASE_ADMIN_PRIVATE_KEY` must be wrapped in double quotes and have literal `\n` for newlines.
-
-### 5. Firestore Security Rules
-
-In Firebase Console → Firestore → **Rules**, paste the contents of `firestore.rules`.
-
-### 6. Run Locally
-
-```bash
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
-
-## Deployment (Vercel)
-
-1. Push to GitHub
-2. Import project at [vercel.com](https://vercel.com)
-3. Add all environment variables in Vercel dashboard
-4. Deploy
-
-## Project Structure
+## 📂 Project Architecture
 
 ```
 app/
 ├── app/
-│   ├── api/
-│   │   ├── analyze/         # AI extraction endpoint
-│   │   ├── projects/        # Project CRUD + invite + settings
-│   │   └── users/           # User colour update
-│   ├── dashboard/           # Main project list
-│   ├── demo/                # Guest/demo mode
-│   ├── login/               # Auth pages
-│   ├── register/
-│   ├── profile/             # User colour picker
-│   ├── projects/
-│   │   ├── new/             # AI extract + manual create
-│   │   └── [id]/            # Project detail (real-time)
-│   ├── layout.tsx
-│   ├── page.tsx             # Landing page
-│   └── globals.css
+│   ├── api/                 # AI extraction & backend endpoints
+│   ├── dashboard/           # Main user dashboard
+│   ├── projects/[id]/       # Real-time multiplayer project view
+│   ├── login/ & register/   # Authentication flows
+│   └── page.tsx             # Interactive landing page
 ├── components/
-│   ├── activity/            # ActivityFeed (real-time)
-│   ├── export/              # ExportMenu (PDF/CSV/MD)
-│   ├── projects/            # ProjectCard
-│   ├── requirements/        # RequirementRow, AddForm, VersionHistory
-│   ├── live-demo-widget.tsx # Interactive AI simulation widget
-│   ├── animated-how-it-works.tsx # Interactive animated stepper
-│   ├── navbar.tsx
-│   └── theme-provider.tsx
-├── lib/
-│   ├── firebase.ts          # Client SDK
-│   ├── firebase-admin.ts    # Admin SDK
-│   ├── auth-context.tsx     # Auth provider
-│   └── firestore.ts         # Data access layer
-├── types/
-│   └── index.ts             # TypeScript interfaces
-└── firestore.rules          # Security rules
+│   ├── live-demo-widget.tsx # AI simulation UI
+│   ├── animated-how-it-works.tsx # Interactive stepper UI
+│   ├── activity/            # Live activity feed
+│   └── requirements/        # Task management & version history
+├── lib/                     # Firebase clients & Admin SDK
+└── firestore.rules          # Strict security policies
 ```
+
+*Built to turn ideas into action, instantly.*
